@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+    <title>Document</title>
+</head>
+<body>
+    <nav>
+        <header class="header">Board Game</header>
+    </nav>
+    <main class="main-container">
+        <section id="config" class="config-container">
+            <aside id="add-players" class="add-players-container">
+                <label for="input-player-name">Player Full Name</label>
+                <input id="input-player-name" />
+                <label for="input-player-token">Player Token</label>
+                <input id="input-player-token" />
+                <button id="add-player-btn">Add Player</button>
+                <ul id="config-players-list">
+                </ul>
+            </aside>
+            <button id="generate-arena-btn">Generate Board</button>
+        </section>
+       
+
+        <div id="board" class="arena"></div>
+    </main>
+</body>
+</html>
+<script src="assets/js/script.js"></script>
+<script src="assets/js/game.js"></script>
