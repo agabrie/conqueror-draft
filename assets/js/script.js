@@ -72,7 +72,7 @@ function updateCell(cell){
     if(currentPlayerPieces<1){
         board.nextPlayerTurn();
         currentPlayer = board.currentPlayer()
-        displayPrompt(`${currentPlayer.name}'s Turn`,1000);
+        displayPrompt(`${currentPlayer.name}'s Turn`,5000);
         resetCurrentPieces();
         renderPlayerInfo();
     }
