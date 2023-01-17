@@ -76,7 +76,7 @@ function getInitial(){
 }
 function selectIcon(event){
     let selectedId = $(this).attr("id")
-    console.log(selectedIcon, selectedId);
+    // console.log(selectedIcon, selectedId);
     selectedIcon = null;
     if(selectedId == "icon-select-initial"){
         selectedIcon = "initial";
@@ -205,12 +205,12 @@ function validateBoard(){
 }
 function validatePlayerInfo(){
     if(playerInfo.icon && playerInfo.name.length >= 3 && playerInfo.color){
-        console.log("valid")
+        // console.log("valid")
         btnAddPlayer.prop("disabled", false)
 
     }
     else{
-        console.log("invalid")
+        // console.log("invalid")
         btnAddPlayer.prop("disabled", true)
     }
 }

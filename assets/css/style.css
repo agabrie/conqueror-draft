@@ -40,6 +40,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    border-radius: 10px;
     /* border: 2px solid black; */
     font-size: var(--cell-size);
     font-weight: 900;
@@ -236,4 +237,8 @@
     color: white;
     font-size: 2.5rem;
     font-weight: 900;
+}
+
+.current-cell{
+    box-shadow: 1px 1px 4px 1px rgb(255, 0, 0);
 }

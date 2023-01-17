@@ -12,6 +12,19 @@ class Cell{
         this.token = token;
         // console.log("new Cell created", coord.getIndex(), coord)
     }
+    getSurroundingCells=()=>{
+        let surroundingCells = [];
+        // console.log("main cell", this);
+        surroundingCells.push(board.getCellAtCoord(this.coord.x,this.coord.y-1))
+        surroundingCells.push(board.getCellAtCoord(this.coord.x,this.coord.y+1))
+        surroundingCells.push(board.getCellAtCoord(this.coord.x-1,this.coord.y))
+        surroundingCells.push( board.getCellAtCoord(this.coord.x+1,this.coord.y))
+        // surroundingCells.push(board.getCellAtCoord(this.coord.x,this.coord.y-1))
+        return surroundingCells;
+    }
+    getIndex=()=>{
+        return this.coord.y*board.size+this.coord.x
+    }
 }
 class Board{
     constructor(size, starting_conditions = {}){
@@ -40,7 +53,7 @@ class Board{
     }
     nextPlayerTurn(){
         this.currentPlayerIndex++;
-        console.log("player to player now",this.currentPlayerIndex, this.currentPlayer())
+        // console.log("player to player now",this.currentPlayerIndex, this.currentPlayer())
         if(this.currentPlayerIndex == this.players.length){
             this.totalTurns++;
             this.currentPlayerIndex = 0;
@@ -73,14 +86,14 @@ class Board{
         this.cellsToRender = []
     }
     placeToken = (token)=>{
-        console.log("place token", token)
+        // console.log("place token", token)
         let tokenIndex = (token.coord.getIndex());
-        console.log(tokenIndex)
+        // console.log(tokenIndex)
         let arenaCell = this.arena[tokenIndex]
         // console.log(this.arena)
         // arenaCell.coord = token.coord;
         arenaCell.token = token.token;
-        console.log(arenaCell)
+        // console.log(arenaCell)
         this.cellsToRender.push(arenaCell);
         // arenaCell.token = `[${token.token.icon}]`;
         // this.arena[(coord.y*10)+coord.x].token = token;
@@ -90,6 +103,18 @@ class Board{
 
         // this.arena[y][x].token = `[${player.character}]`;
         this.players.push(player);
+    }
+    getCellAtCoord=(x,y)=>{
+        // console.log(x, y, this.size)
+        if(y >= this.size || x >= this.size || y <0 && x < 0){
+            return null
+        }else{
+            return this.getCellAtIndex(y*this.size+x)
+        }
+    }
+    getCellAtIndex=(index)=>{
+        // console.log(index,this.arena[index])
+        return this.arena[index]
     }
 }
 class Player{
@@ -112,9 +137,22 @@ class Player{
         return cell;
     }
     printCharacterDetails =()=>{
-        console.log(this)
+        // console.log(this)
         console.log(`##############################\n${this.token.color} ${this.token.icon} : ${this.name}\nNumber Of Tokens : {${this.tokens.length}}\n##############################`)
     }
+    getAvailableCells=()=>{
+        let surroundingTokens = [];
+        // surroundingTokens = this.tokens[0].getSurroundingCells()
+        this.tokens.forEach((token)=>{
+         surroundingTokens = surroundingTokens.concat(token.getSurroundingCells())
+         surroundingTokens = surroundingTokens.filter((item, pos) => {console.log(item, pos); return surroundingTokens.indexOf(item) === pos && item && !item.token})
+        // surroundingTokens = surroundingTokens.filter((item)=> !item.token)
+        
+        })
+        
+        return surroundingTokens;
+    }
+
 }
 class Upgrade extends GameObject{
     constructor(pos){

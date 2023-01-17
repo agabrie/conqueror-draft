@@ -12,9 +12,9 @@ let cells = [];
 let updatedCells = [];
 let currentPlayerIndex = 0;
 let currentPlayer = null;
-
+let closePromptInstructions = null;
 let currentPlayerPieces = 0;
-
+let promptTimer;
 $(document).ready(()=>{
     boardElement.hide();
     sectionGameInfo.hide();
@@ -31,8 +31,7 @@ function initGame(){
     })
     generateBoard();
     renderBoard();
-    resetCurrentPieces();
-    renderPlayerInfo()
+    startPlayerTurn()
 
     // board.printBoard();
 }
@@ -51,7 +50,7 @@ function generateBoard(){
         let board_row = $(`<tr class="row"></tr>`);
         for (let col = 0; col < board.size; col++) {
             let cellElement = getCellFromCoords(col,row);
-            cellElement.html.on("click", ()=>{updateCell(cellElement)})
+            // cellElement.html.on("click", ()=>{updateCell(cellElement)})
             board_row.append(cellElement.html)
             // board_rows.push(cellElement.html)
         }
@@ -63,18 +62,14 @@ function getCellFromCoords(x, y){
     return cells[y*board.size+x];
 }
 function updateCell(cell){
-    console.log(cell)
+    // console.log(cell)
     let {x,y} = cell.json.coord;
     placeToken(x,y)
     currentPlayerPieces--;
     renderPlayerInfo();
     renderBoard();
     if(currentPlayerPieces<1){
-        board.nextPlayerTurn();
-        currentPlayer = board.currentPlayer()
-        displayPrompt(`${currentPlayer.name}'s Turn`,5000);
-        resetCurrentPieces();
-        renderPlayerInfo();
+        nextPlayerTurn();
     }
     // updatedCells.push(cell);
     // if(board.currentPlayer() == players[0]){
@@ -82,11 +77,27 @@ function updateCell(cell){
         // cell.html.addClass("selected-cell")
     // }
 }
+function nextPlayerTurn(){
+    hideAvailableCells();
+    board.nextPlayerTurn();
+    currentPlayer = board.currentPlayer()
+    displayPrompt(`${currentPlayer.name}'s Turn`,1000, ()=>{
+        closePrompt();
+    },()=>{
+        
+            startPlayerTurn();
+    });
+}
+function startPlayerTurn(){
+    resetCurrentPieces();
+    renderPlayerInfo();
+    showAvailableCells();
+}
 function resetCurrentPieces(){
     currentPlayerPieces = board.currentPlayer().max_pieces;
 }
 function createToken(token){
-    console.log("create token", token)
+    // console.log("create token", token)
     let jToken = $(`<div  class="token"></div>`)
     jToken.attr('class', `token token-${token.color}`)
     jToken.text(token.icon)
@@ -94,10 +105,10 @@ function createToken(token){
     return jToken;
 }
 function renderBoard(){
-    console.log(board.cellsToRender)
+    // console.log(board.cellsToRender)
     board.cellsToRender.forEach(cell=>{
         let cellToUpdate = cells[cell.coord.getIndex()]
-        console.log(cellToUpdate)
+        // console.log(cellToUpdate)
         let jToken = createToken(cell.token);
         cellToUpdate.html.empty()
         cellToUpdate.html.append(jToken)
@@ -133,14 +144,42 @@ function resetGame(){
 
 }
 function closePrompt(){
+    // clearTimeout(promptTimer)
     sectionPrompt.hide(100);
+    if(closePromptInstructions){
+        closePromptInstructions()
+        closePromptInstructions = null;
+    }
 }
 
-function displayPrompt(text, duration){
+function displayPrompt(text, duration, cb=null, cbInstructions=null){
+    closePromptInstructions = cbInstructions;
     sectionPrompt.show(0,()=>{
         promptBody.text(text)
-        setTimeout(()=>{
-            closePrompt()
+        promptTimer = setTimeout(()=>{
+            if(cb){
+                cb()
+            }
         },duration)
+    })
+}
+
+function showAvailableCells(){
+    let playerTokens = currentPlayer.getAvailableCells();
+    console.log(playerTokens)
+    playerTokens.forEach((token)=>{
+        let cellToUpdate = cells[token.getIndex()]
+        cellToUpdate.html.addClass('current-cell');
+        cellToUpdate.html.on("click", ()=>{updateCell(cellToUpdate)})
+
+    })
+}
+function hideAvailableCells(){
+    let playerTokens = currentPlayer.getAvailableCells().concat(currentPlayer.tokens);
+    console.log(playerTokens)
+    playerTokens.forEach((token)=>{
+        let cellToUpdate = cells[token.getIndex()]
+        cellToUpdate.html.removeClass('current-cell');
+        cellToUpdate.html.off("click")
     })
 }
