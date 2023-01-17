@@ -5,7 +5,9 @@ const btnAddPlayerDefaults = $("#btn-add-player-defaults")
 const sectionGameInfo=$("#section-game-info")
 const sectionGameConfig=$("#section-game-config")
 const btnReset=$("#btn-reset")
-
+const btnClosePrompt = $("#btn-close-prompt");
+const sectionPrompt = $("#prompt-section");
+const promptBody = $("#prompt-body");
 let cells = [];
 let updatedCells = [];
 let currentPlayerIndex = 0;
@@ -17,7 +19,8 @@ $(document).ready(()=>{
     boardElement.hide();
     sectionGameInfo.hide();
     btnReset.on("click",resetGame)
-
+    sectionPrompt.hide();
+    btnClosePrompt.on("click", closePrompt)
 })
 function initGame(){
     startGame(players, boardSize)
@@ -69,6 +72,7 @@ function updateCell(cell){
     if(currentPlayerPieces<1){
         board.nextPlayerTurn();
         currentPlayer = board.currentPlayer()
+        displayPrompt(`${currentPlayer.name}'s Turn`,1000);
         resetCurrentPieces();
         renderPlayerInfo();
     }
@@ -127,4 +131,16 @@ function resetGame(){
     board=null;
     hideBoard()
 
+}
+function closePrompt(){
+    sectionPrompt.hide(100);
+}
+
+function displayPrompt(text, duration){
+    sectionPrompt.show(0,()=>{
+        promptBody.text(text)
+        setTimeout(()=>{
+            closePrompt()
+        },duration)
+    })
 }
