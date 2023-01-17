@@ -226,6 +226,8 @@ function renderPlayerInfo(){
     currentPlayer = board.currentPlayer();
     let cp = currentPlayer;
     cpName.text(cp.name);
+    cpToken.attr("class",`token token-${cp.token.color}`)
+    cpToken.text(cp.token.icon)
     cpPoints.text(cp.points);
     cpPieces.text(`${currentPlayerPieces}/${cp.max_pieces}`);
     cpTurns.text(cp.name);

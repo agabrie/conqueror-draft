@@ -79,12 +79,12 @@
     justify-content: center;
     align-items: center;
     border-style: solid;
-    border-width: 2px;
+    border-width: 1px;
     border-radius: 10px;
     /* padding: .2rem; */
     min-width: calc(var(--cell-size) - 1px);
     min-height: calc(var(--cell-size) - 1px);
-    font-size: calc(var(--cell-size) - 6px);
+    font-size: calc(var(--cell-size) - 1rem);
     font-weight: 900;
     box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, .5);
 

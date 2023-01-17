@@ -165,18 +165,22 @@ function displayPrompt(text, duration, cb=null, cbInstructions=null){
 }
 
 function showAvailableCells(){
-    let playerTokens = currentPlayer.getAvailableCells();
-    console.log(playerTokens)
-    playerTokens.forEach((token)=>{
+    let availableCells = currentPlayer.getAvailableCells();
+    // console.log(playerTokens)
+    availableCells.forEach((token)=>{
         let cellToUpdate = cells[token.getIndex()]
         cellToUpdate.html.addClass('current-cell');
         cellToUpdate.html.on("click", ()=>{updateCell(cellToUpdate)})
 
     })
+
+    if(availableCells.length <= 0){
+        displayPrompt("Game Over")
+    }
 }
 function hideAvailableCells(){
     let playerTokens = currentPlayer.getAvailableCells().concat(currentPlayer.tokens);
-    console.log(playerTokens)
+    // console.log(playerTokens)
     playerTokens.forEach((token)=>{
         let cellToUpdate = cells[token.getIndex()]
         cellToUpdate.html.removeClass('current-cell');

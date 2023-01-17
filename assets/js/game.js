@@ -1,4 +1,4 @@
-let boardSize = 20;
+let boardSize = 15;
 
 let board;
 class GameObject{
@@ -106,7 +106,7 @@ class Board{
     }
     getCellAtCoord=(x,y)=>{
         // console.log(x, y, this.size)
-        if(y >= this.size || x >= this.size || y <0 && x < 0){
+        if(y >= this.size || x >= this.size || y < 0 || x < 0){
             return null
         }else{
             return this.getCellAtIndex(y*this.size+x)
@@ -145,7 +145,7 @@ class Player{
         // surroundingTokens = this.tokens[0].getSurroundingCells()
         this.tokens.forEach((token)=>{
          surroundingTokens = surroundingTokens.concat(token.getSurroundingCells())
-         surroundingTokens = surroundingTokens.filter((item, pos) => {console.log(item, pos); return surroundingTokens.indexOf(item) === pos && item && !item.token})
+         surroundingTokens = surroundingTokens.filter((item, pos) => surroundingTokens.indexOf(item) === pos && item && !item.token)
         // surroundingTokens = surroundingTokens.filter((item)=> !item.token)
         
         })
