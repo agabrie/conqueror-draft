@@ -6,30 +6,93 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/css/style.css">
     <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
-    <title>Document</title>
+    <title>Conquest</title>
 </head>
 <body>
-    <nav>
-        <header class="header">Board Game</header>
+    <nav class="navigation-bar">
+        <header class="header">Conquest</header>
     </nav>
     <main class="main-container">
-        <section id="config" class="config-container">
-            <aside id="add-players" class="add-players-container">
+        <aside id="config" class="config-container">
+            <section id="section-game-config" class="add-players-container">
                 <label for="input-player-name">Player Full Name</label>
                 <input id="input-player-name" />
-                <label for="input-player-token">Player Token</label>
-                <input id="input-player-token" />
-                <button id="add-player-btn">Add Player</button>
+                <div class="player-config-token">
+                    <div>
+                        <label for="input-player-token">Player Token</label>
+                        <div class="player-config-selection">
+                            <div id="color-select-red" class="selection">
+                                <div  class="token token-red"></div>
+                            </div>
+                            <div id="color-select-green" class="selection">
+                                <div  class="token token-green"></div>
+                            </div>
+                            <div id="color-select-blue" class="selection">
+                                <div  class="token token-blue"></div>
+                            </div>
+                            <div id="color-select-purple" class="selection">
+                                <div class="token token-purple"></div>
+                            </div>
+                            <div id="color-select-yellow" class="selection">
+                                <div class="token token-yellow"></div>
+                            </div>
+                        </div>
+                        <label for="input-player-color">Player Color</label>
+                        <div class="player-config-selection">
+                            <div id="icon-select-initial" class="selection">A</div>
+                            <div id="icon-select-star" class="selection">⋆</div>
+                            <div id="icon-select-heart" class="selection">❤</div>
+                            <div id="icon-select-spade" class="selection">♠</div>
+                            <div id="icon-select-diamond" class="selection">◆</div>
+                        </div>
+                    </div>
+                    <div class="token-preview">
+                        <div id="preview-token" class="token"></div>
+                    </div>
+                </div>
+                
+                <button id="btn-add-player" disabled>Add Player</button>
+                <!-- <button id="btn-add-player-defaults">Add Default Players</button> -->
                 <ul id="config-players-list">
                 </ul>
-            </aside>
-            <button id="generate-arena-btn">Generate Board</button>
-        </section>
+                <button id="btn-generate-arena" disabled>Generate Board</button>
+            </section>
+            <section id="section-game-info">
+                <article id="current-player-info" class="current-player-info" >
+                    <div>
+                        Name:
+                        <span id="current-player-name"></span>
+                    </div>
+                    <div>
+                        Token:
+                        <div class="token-preview">
+                            <div id="current-player-token" class="token"></div>
+                        </div>
+                    </div>
+                    <div>
+                        Points :<span id="current-player-points"></span>
+                    </div>
+                    
+                    <div>
+                        Available Pieces :<span id="current-player-pieces"></span>
+                    </div>
+                    <div>
+                        Number Of turns :<span id="current-player-turns"></span>
+                    </div>
+                </article>
+                <button id="btn-reset">Reset</button>
+            </section>
+        </aside>
        
 
-        <div id="board" class="arena"></div>
+        <table id="board" class="arena"></table>
     </main>
+
+    <div id="prompt" class="prompt">
+        
+    </div>
 </body>
 </html>
 <script src="assets/js/script.js"></script>
 <script src="assets/js/game.js"></script>
+<script src="assets/config/players.js"></script>

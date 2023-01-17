@@ -1,38 +1,51 @@
 const boardElement = $("#board")
-const btnGenerateArena = $("#generate-arena-btn")
-const btnAddPlayer = $("#add-player-btn")
+const btnGenerateArena = $("#btn-generate-arena")
+const btnAddPlayer = $("#btn-add-player")
+const btnAddPlayerDefaults = $("#btn-add-player-defaults")
+const sectionGameInfo=$("#section-game-info")
+const sectionGameConfig=$("#section-game-config")
+const btnReset=$("#btn-reset")
 
-
-
-let players = [];
 let cells = [];
 let updatedCells = [];
 let currentPlayerIndex = 0;
-btnAddPlayer.on("click",()=>{
-    const inputPlayerName = $("#input-player-name")
-    const inputPlayerToken = $("#input-player-token")
-    let playerName = inputPlayerName.val()
-    let playerToken = inputPlayerToken.val()
-    let player = new Player(playerName, playerToken)
-    player.printCharacterDetails();
-    players.push(player);
-    renderConfigPlayerList()
-})
+let currentPlayer = null;
 
-btnGenerateArena.on("click",()=>{
-    startGame(players, 20)
+let currentPlayerPieces = 0;
+
+$(document).ready(()=>{
+    boardElement.hide();
+    sectionGameInfo.hide();
+    btnReset.on("click",resetGame)
+
+})
+function initGame(){
+    startGame(players, boardSize)
+    
+    players.forEach((player,index)=>{
+        let {x, y} = startingPositions[index]
+        placeToken(x, y, player)
+    })
     generateBoard();
-})
+    renderBoard();
+    resetCurrentPieces();
+    renderPlayerInfo()
 
+    // board.printBoard();
+}
+function placeToken(x, y, player=board.currentPlayer()){
+    board.placeToken(player.createToken(new Coord(x, y)));
+}
 function generateBoard(){
+    cells = [];
     board.arena.forEach(arenaCell => {
-        let cellElement = $(`<div id="cell_${arenaCell.coord.x}_${arenaCell.coord.y}" class="cell"></div>`)
+        let cellElement = $(`<td id="cell_${arenaCell.coord.x}_${arenaCell.coord.y}" class="cell"></td>`)
         cells.push({json:arenaCell, html:cellElement});
     });
-    
+    boardElement.empty();
     for (let row = 0; row < board.size; row++) {
         // let board_rows = []
-        let board_row = $(`<div class="row"></div>`);
+        let board_row = $(`<tr class="row"></tr>`);
         for (let col = 0; col < board.size; col++) {
             let cellElement = getCellFromCoords(col,row);
             cellElement.html.on("click", ()=>{updateCell(cellElement)})
@@ -41,31 +54,77 @@ function generateBoard(){
         }
         boardElement.append(board_row)
     }
+    showBoard();
 }
 function getCellFromCoords(x, y){
     return cells[y*board.size+x];
 }
 function updateCell(cell){
-    updatedCells.push(cell);
-    if(board.currentPlayer() == players[0]){
-        cell.html.addClass("p0")
-        cell.html.addClass("selected-cell")
+    console.log(cell)
+    let {x,y} = cell.json.coord;
+    placeToken(x,y)
+    currentPlayerPieces--;
+    renderPlayerInfo();
+    renderBoard();
+    if(currentPlayerPieces<1){
+        board.nextPlayerTurn();
+        currentPlayer = board.currentPlayer()
+        resetCurrentPieces();
+        renderPlayerInfo();
     }
+    // updatedCells.push(cell);
+    // if(board.currentPlayer() == players[0]){
+        // cell.html.addClass("p0")
+        // cell.html.addClass("selected-cell")
+    // }
 }
-
-function renderConfigPlayerList(){
-    const configPlayerList = $("#config-players-list");
-    configPlayerList.empty();
-    players.forEach((player, index)=>{
-        let playerLi = $(`<li>${player.name}</li>`)
-        let removeplayerBtn =$(`<button>Remove</button>`)
-        removeplayerBtn.on("click", ()=>{removePlayer(index)})
-        playerLi.append(removeplayerBtn);
-        configPlayerList.append(playerLi)
+function resetCurrentPieces(){
+    currentPlayerPieces = board.currentPlayer().max_pieces;
+}
+function createToken(token){
+    console.log("create token", token)
+    let jToken = $(`<div  class="token"></div>`)
+    jToken.attr('class', `token token-${token.color}`)
+    jToken.text(token.icon)
+    jToken.hide();
+    return jToken;
+}
+function renderBoard(){
+    console.log(board.cellsToRender)
+    board.cellsToRender.forEach(cell=>{
+        let cellToUpdate = cells[cell.coord.getIndex()]
+        console.log(cellToUpdate)
+        let jToken = createToken(cell.token);
+        cellToUpdate.html.empty()
+        cellToUpdate.html.append(jToken)
+        jToken.show(200);
     })
+    board.clearRenderedCells();
 }
 
-function removePlayer(index){
-    players.splice(index,1)
-    renderConfigPlayerList();
+function showBoard(){
+    boardElement.show(1000)
+    sectionGameInfo.show(1000);
+    // console.log(gameInitSection)
+    sectionGameConfig.hide(1000);
+}
+function hideBoard(){
+    boardElement.hide(1000);
+    sectionGameInfo.hide(1000);
+    sectionGameConfig.show(1000);
+
+}
+function resetGame(){
+    cells = [];
+    updatedCells = [];
+    currentPlayerIndex = 0;
+
+    currentPlayerPieces = 0;
+    playerInfo = {name:null,color:null,icon:null}
+    boardSize = 20;
+    configPlayerList.empty()
+    boardElement.empty()
+    board=null;
+    hideBoard()
+
 }
