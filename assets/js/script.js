@@ -1,3 +1,8 @@
+let ws = new WebSocket("ws://localhost:3000")
+
+ws.addEventListener('message',(event)=>{
+    console.log(event.data)
+})
 const boardElement = $("#board")
 const btnGenerateArena = $("#btn-generate-arena")
 const btnAddPlayer = $("#btn-add-player")
@@ -139,6 +144,7 @@ function resetGame(){
     boardSize = 20;
     configPlayerList.empty()
     boardElement.empty()
+    
     board=null;
     hideBoard()
 

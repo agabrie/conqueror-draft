@@ -1,4 +1,4 @@
-let boardSize = 15;
+let boardSize = 5;
 
 let board;
 class GameObject{
